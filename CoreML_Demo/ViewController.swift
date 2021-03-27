@@ -11,7 +11,7 @@ class ViewController: UIViewController {
     
     private let imageView: UIImageView = {
             let imageView = UIImageView()
-            //imageView.image = UIImage(systemName: "photo")
+            imageView.image = UIImage(systemName: "photo")
             imageView.contentMode = .scaleAspectFit
             return imageView
         }()
@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.text = "Select image"
         label.numberOfLines = 0
         return label
     }()
@@ -28,6 +29,13 @@ class ViewController: UIViewController {
         view.addSubview(label)
         view.addSubview(imageView)
 
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        imageView.frame = CGRect(x: 20, y: view.safeAreaInsets.top, width: view.frame.size.width - 40, height: view.frame.size.width - 40)
+        
+        label.frame = CGRect(x: 29, y: view.safeAreaInsets.top+(view.frame.size.width - 40) + 10, width: view.frame.size.width - 40, height: 100)
     }
 
     private func analyzeImage (image: UIImage?) {
