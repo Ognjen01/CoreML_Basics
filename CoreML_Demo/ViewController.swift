@@ -7,9 +7,9 @@
 import CoreML
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private let imageView: UIImageView = {
+    private var imageView: UIImageView = {
             let imageView = UIImageView()
             imageView.image = UIImage(systemName: "photo")
             imageView.contentMode = .scaleAspectFit
@@ -28,9 +28,23 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(label)
         view.addSubview(imageView)
+        
+        let tap = UITapGestureRecognizer(target: self,
+        action: #selector(didTapImage))
+        
+        tap.numberOfTapsRequired = 1
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tap)
 
     }
     
+    @objc func didTapImage()
+    {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.delegate = self
+        present(picker, animated: true)
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         imageView.frame = CGRect(x: 20, y: view.safeAreaInsets.top, width: view.frame.size.width - 40, height: view.frame.size.width - 40)
@@ -54,6 +68,22 @@ class ViewController: UIViewController {
         } catch {
             print (error.localizedDescription)
         }
+    }
+    
+    // Image Picker
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        // canceled
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+            return
+        }
+        imageView.image = image
+        analyzeImage(image: image)
     }
 
 }
