@@ -39,8 +39,12 @@ class ViewController: UIViewController {
             let config = MLModelConfiguration()
             let model = try GoogLeNetPlaces(configuration: config)
             let input = GoogLeNetPlacesInput(sceneImage: buffer)
-        } catch {
             
+            let output = try model.prediction(input: input)
+            let text = output.sceneLabel
+            label.text = text
+        } catch {
+            print (error.localizedDescription)
         }
     }
 
